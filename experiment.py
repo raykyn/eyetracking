@@ -20,6 +20,17 @@ stimuli = [
     "Als Maurerin zu arbeiten, war schon immer ihr Traum gewesen."
 ]
 
+"""
+import os
+from pygaze import FONTDIR
+import pygame
+font = "mono"
+fontname = os.path.join(FONTDIR, font) + ".ttf"
+font = pygame.font.Font(fontname, 24)
+print(font.size(" "))
+# 5 letters: 32px height, 70px width
+# 1 letter: 32px, 14px width
+"""
 
 ### constants ###
 
@@ -84,6 +95,15 @@ for trialnr, stimulus in enumerate(stimuli):
     disp.fill(stimulus_screen)
     disp.show()
 
+    # Big TODO: In the while-loop, check for each fixation if it's inside a boundary box of a word.
+    # How do we get boundary boxes? We're using monofont, so we should be able to calculate each word position.
+    # How wide are our characters in monofont???
+    # Okay, I got the answer to that by testing in pygame:
+    # Using our font (Roboto Mono), a single letter or whitespace has a width of 14px (and a height of 70, but that's less relevant)
+    # Using this number, we can calculate where a stimulus starts (on the screen), and then be able to calculate each word boundary box.
+    # Technically, we only need to get the coordinates of the whitespaces to do this.
+    # The vertical position is almost irrelevant, because all stimuli are one-liners
+
     response = None
     while not response:
         fixation_start_time, startpos = tracker.wait_for_fixation_start()
@@ -94,7 +114,7 @@ for trialnr, stimulus in enumerate(stimuli):
             endpos[0], endpos[1]
         ))
 
-        # the person only needs to look approximately into the corner, so take a bit of space
+        # the person only needs to look approximately into the corner, so it counts 100 pixels around as well
         if endpos[0] > 1740 and endpos[1] > 900:
             break
         # TODO: I can't figure out how to escape the loop by pressing the button, so I'll just go back to looking in a corner
