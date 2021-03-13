@@ -7,18 +7,30 @@ from pygaze import libtime
 from pygaze import liblog
 from pygaze import libinput
 from pygaze import eyetracker
-from psychopy.visual import TextStim
+from psychopy.visual import TextBox2
+from psychopy.visual.rect import Rect
+
+
+class Stimulus:
+    def __init__(self, text):
+        if '|' in text:
+            text_before, text_of_interest, text_after = text.split('|')
+            self.text = text.replace('|', '')
+            self.chars_of_interest = (len(text_before), len(text_before) + len(text_of_interest))
+        else:
+            self.text = text
+            self.chars_of_interest = None
 
 
 ### for testing ###
 stimuli = [
-    "Meine Sekretärin hat versprochen, mich morgen anzurufen.",
-    "Auf der Arbeit hatte er heute eine Beförderung erhalten.",
-    "Das älteste Kind hatte zuvor eine Ausbildung zum Informatiker gemacht.",
-    "Schon wieder hatte die Schule ihn angerufen, weil sein Sohn Probleme gemacht hatte.",
-    "Er war verärgert, denn er hatte die Bestellung schon vor drei Tagen bei dem Florist in Auftrag gegeben.",
-    "Wenn ich noch mehr arbeite, habe ich bald ein Burnout.",
-    "Als Maurerin zu arbeiten, war schon immer ihr Traum gewesen."
+    Stimulus("Meine |Sekretärin| hat versprochen, mich morgen anzurufen."),
+    Stimulus("|Auf| der Arbeit hatte er heute eine Beförderung erhalten."),
+    Stimulus("Das älteste Kind hatte zuvor eine Ausbildung zum |Informatiker| gemacht."),
+    Stimulus("Schon wieder hatte die Schule ihn angerufen, weil sein Sohn Probleme gemacht |hatte|."),
+    Stimulus("Er war verärgert, denn er hatte die Bestellung schon vor drei Tagen bei dem |Florist| in Auftrag gegeben."),
+    Stimulus("Wenn ich noch mehr arbeite|,| habe ich bald ein Burnout."),
+    Stimulus("Als |Maurerin| zu arbeiten, war schon immer ihr Traum gewesen."),
 ]
 
 """
@@ -82,12 +94,23 @@ for trialnr, stimulus in enumerate(stimuli):
     # start eye tracking
     tracker.start_recording()
     tracker.status_msg("trial {}".format(trialnr))
-    tracker.log("start_trial {} trialtype '{}'".format(trialnr, stimulus))
+    tracker.log("start_trial {} trialtype '{}'".format(trialnr, stimulus.text))
 
     # show stimulus
     stimulus_screen = libscreen.Screen()
-    textstim = TextStim(pygaze.expdisplay, text=stimulus, font="mono", height=24, color="black", wrapWidth=constants.DISPSIZE[0])
-    stimulus_screen.screen.append(textstim)
+    textbox = TextBox2(pygaze.expdisplay, text=stimulus.text, font="sans-serif", letterHeight=24, color="black", size=(constants.DISPSIZE[0], None))
+    if stimulus.chars_of_interest is not None:
+        coi_start = stimulus.chars_of_interest[0]
+        coi_end = stimulus.chars_of_interest[1]
+        aoi_top_left = textbox.verticesPix[coi_start * 4 + 1].copy()
+        aoi_bottom_right = textbox.verticesPix[coi_end * 4 - 1].copy()
+        aoi_width = aoi_bottom_right[0] - aoi_top_left[0]
+        aoi_height = aoi_bottom_right[1] - aoi_top_left[1]
+        aoi_center = (aoi_top_left + aoi_bottom_right) / 2
+        aoi = Rect(pygaze.expdisplay, width=aoi_width, height=aoi_height, pos=aoi_center, fillColor="red")
+        stimulus_screen.screen.append(aoi)
+
+    stimulus_screen.screen.append(textbox)
     # stimulus_screen.draw_text(text=stimulus, fontsize=24)
     stimulus_screen.draw_fixation(fixtype='cross', pos=(1840, 1000), pw=3) # bottom right, look at it to finish reading sentence
     disp.fill(stimulus_screen)
