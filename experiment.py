@@ -1,12 +1,13 @@
 #! /usr/bin/python3
 
 import constants
-import random
+import pygaze
 from pygaze import libscreen
 from pygaze import libtime
 from pygaze import liblog
 from pygaze import libinput
 from pygaze import eyetracker
+from psychopy.visual import TextStim
 
 
 ### for testing ###
@@ -31,11 +32,6 @@ print(font.size(" "))
 # 5 letters: 32px height, 70px width
 # 1 letter: 32px, 14px width
 """
-
-### constants ###
-
-# display size in pixels
-DISPSIZE = (1920, 1080)
 
 
 ### experiment setup ###
@@ -90,7 +86,9 @@ for trialnr, stimulus in enumerate(stimuli):
 
     # show stimulus
     stimulus_screen = libscreen.Screen()
-    stimulus_screen.draw_text(text=stimulus, fontsize=24)
+    textstim = TextStim(pygaze.expdisplay, text=stimulus, font="mono", height=24, color="black", wrapWidth=constants.DISPSIZE[0])
+    stimulus_screen.screen.append(textstim)
+    # stimulus_screen.draw_text(text=stimulus, fontsize=24)
     stimulus_screen.draw_fixation(fixtype='cross', pos=(1840, 1000), pw=3) # bottom right, look at it to finish reading sentence
     disp.fill(stimulus_screen)
     disp.show()
