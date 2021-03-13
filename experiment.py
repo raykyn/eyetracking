@@ -1,14 +1,16 @@
 #! /usr/bin/python3
 
-import constants
 import pygaze
 from pygaze import libscreen
 from pygaze import libtime
 from pygaze import liblog
 from pygaze import libinput
 from pygaze import eyetracker
-from psychopy.visual import TextBox2
+from psychopy.visual.textbox2 import TextBox2, allFonts
 from psychopy.visual.rect import Rect
+
+
+allFonts.addFontDirectory("fonts")
 
 
 class Stimulus:
@@ -98,7 +100,7 @@ for trialnr, stimulus in enumerate(stimuli):
 
     # show stimulus
     stimulus_screen = libscreen.Screen()
-    textbox = TextBox2(pygaze.expdisplay, text=stimulus.text, font="sans-serif", letterHeight=24, color="black", size=(constants.DISPSIZE[0], None))
+    textbox = TextBox2(pygaze.expdisplay, text=stimulus.text, font="Roboto Mono", letterHeight=24, color="black", size=(None, None))
     if stimulus.chars_of_interest is not None:
         coi_start = stimulus.chars_of_interest[0]
         coi_end = stimulus.chars_of_interest[1]
