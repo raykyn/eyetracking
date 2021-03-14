@@ -110,8 +110,8 @@ for trialnr, stimulus in enumerate(stimuli):
     if stimulus.chars_of_interest is not None:
         coi_start = stimulus.chars_of_interest[0]
         coi_end = stimulus.chars_of_interest[1]
-        aoi_top_left = textbox.verticesPix[coi_start * 4 + 1]
-        aoi_bottom_right = textbox.verticesPix[coi_end * 4 - 1]
+        aoi_top_left = textbox.verticesPix[coi_start * 4 + 1] + (-5, -5)
+        aoi_bottom_right = textbox.verticesPix[coi_end * 4 - 1] + (5, 5)
         aoi_width = aoi_bottom_right[0] - aoi_top_left[0]
         aoi_height = aoi_bottom_right[1] - aoi_top_left[1]
         aoi_center = (aoi_top_left + aoi_bottom_right) / 2
@@ -128,6 +128,7 @@ for trialnr, stimulus in enumerate(stimuli):
     stimulus_screen.screen.append(textbox)
     disp.fill(stimulus_screen)
     disp.show()
+    event.clearEvents()
 
     response = None
     while not response:
@@ -148,13 +149,9 @@ for trialnr, stimulus in enumerate(stimuli):
         log.write([datetime.now().isoformat(), trialnr, stimulus.text, fixation_start_time, fixation_end_time, startpos, endpos, aoi_start, aoi_end])
 
         # the person only needs to look approximately into the corner, so it counts 100 pixels around as well
-        space_pressed = False
-        for key in event.getKeys('space'):
-            if key == 'space':
-                space_pressed = True
-                event.clearEvents()
-                break
-        if space_pressed:
+        if 'space' in event.getKeys():
+            space_pressed = True
+            event.clearEvents()
             break
 
     tracker.stop_recording()
