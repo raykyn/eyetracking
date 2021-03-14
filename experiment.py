@@ -3,6 +3,7 @@
 import constants
 import numpy as np
 import pygaze
+from datetime import datetime
 from pygaze import libscreen
 from pygaze import libtime
 from pygaze import liblog
@@ -68,8 +69,7 @@ keyboard = libinput.Keyboard(keylist=['space'], timeout=None)
 
 # create logfile object
 log = liblog.Logfile()
-# TODO: Fill log with relevant info
-log.write(["trialnr", "trialtype", "endpos", "latency"])
+log.write(["timestamp", "trialnr", "stimulus", "starttime", "endtime", "startpos", "endpos", "aoi_start", "aoi_end"])
 
 inscreen = libscreen.Screen()
 inscreen.draw_text(text="In the next screen fixate on the dot in the lower left corner. Then read the sentence and after reading it, press space.\n\n(press space to start)", fontsize=24)
@@ -100,7 +100,7 @@ for trialnr, stimulus in enumerate(stimuli):
     # start eye tracking
     tracker.start_recording()
     tracker.status_msg("trial {}".format(trialnr))
-    tracker.log("start_trial {} trialtype '{}'".format(trialnr, stimulus.text))
+    tracker.log("start_trial {} stimulus '{}'".format(trialnr, stimulus.text))
 
     # show stimulus
     stimulus_screen = libscreen.Screen()
@@ -132,16 +132,20 @@ for trialnr, stimulus in enumerate(stimuli):
     response = None
     while not response:
         fixation_start_time, startpos = tracker.wait_for_fixation_start()
+        aoi_start = aoi_end = False
         if aoi is not None and aoi.contains(startpos):
             tracker.log("AOI fixation started")
+            aoi_start = True
         fixation_end_time, endpos = tracker.wait_for_fixation_end()
         if aoi is not None and aoi.contains(endpos):
             tracker.log("AOI fixation ended")
+            aoi_end = True
         tracker.log("Fixation: {} ms / pos start {}, {} / pos end {}, {}".format(
             fixation_end_time - fixation_start_time,
             startpos[0], startpos[1],
             endpos[0], endpos[1]
         ))
+        log.write([datetime.now().isoformat(), trialnr, stimulus.text, fixation_start_time, fixation_end_time, startpos, endpos, aoi_start, aoi_end])
 
         # the person only needs to look approximately into the corner, so it counts 100 pixels around as well
         space_pressed = False

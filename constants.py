@@ -22,7 +22,7 @@
 
 # MAIN
 DUMMYMODE = True # False for gaze contingent display, True for dummy mode (using mouse or joystick)
-LOGFILENAME = 'default' # logfilename, without path
+LOGFILENAME = 'log' # logfilename, without path
 LOGFILE = LOGFILENAME[:] # .txt; adding path before logfilename is optional; logs responses (NOT eye movements, these are stored in an EDF file!)
 TRIALS = 5
 
