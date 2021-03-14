@@ -55,8 +55,7 @@ keyboard = libinput.Keyboard(keylist=['space'], timeout=None)
 
 # create logfile object
 log = liblog.Logfile()
-# TODO: Fill log with relevant info
-log.write(["timestamp", "trialnr", "stimulus", "startpos", "endpos", "aoi"])
+log.write(["timestamp", "trialnr", "stimulus", "starttime", "endtime", "startpos", "endpos", "aoi"])
 
 inscreen = libscreen.Screen()
 inscreen.draw_text(text="In the next screen fixate on the dot in the lower left corner. Then read the sentence and after reading it, press space.\n\n(press space to start)", fontsize=24)
@@ -114,7 +113,7 @@ for trialnr, stimulus in enumerate(stimuli):
             startpos[0], startpos[1],
             endpos[0], endpos[1]
         ))
-        log.write([datetime.now().isoformat(), trialnr, stimulus, startpos, endpos, False])
+        log.write([datetime.now().isoformat(), trialnr, stimulus, fixation_start_time, fixation_end_time, startpos, endpos, False])
 
         # the person only needs to look approximately into the corner, so it counts 100 pixels around as well
         if endpos[0] > 1740 and endpos[1] > 900:
