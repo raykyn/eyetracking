@@ -9,6 +9,7 @@ from pygaze import liblog
 from pygaze import libinput
 from pygaze import eyetracker
 from pygaze.plugins.aoi import AOI
+from psychopy import event
 from psychopy.visual.textbox2 import TextBox2, allFonts
 from psychopy.visual.rect import Rect
 
@@ -125,7 +126,6 @@ for trialnr, stimulus in enumerate(stimuli):
         aoi = None
 
     stimulus_screen.screen.append(textbox)
-    stimulus_screen.draw_fixation(fixtype='cross', pos=(1840, 1000), pw=3) # bottom right, look at it to finish reading sentence
     disp.fill(stimulus_screen)
     disp.show()
 
@@ -144,11 +144,14 @@ for trialnr, stimulus in enumerate(stimuli):
         ))
 
         # the person only needs to look approximately into the corner, so it counts 100 pixels around as well
-        if endpos[0] > 1740 and endpos[1] > 900:
+        space_pressed = False
+        for key in event.getKeys('space'):
+            if key == 'space':
+                space_pressed = True
+                event.clearEvents()
+                break
+        if space_pressed:
             break
-        # TODO: I can't figure out how to escape the loop by pressing the button, so I'll just go back to looking in a corner
-        # the bottom right to finish. TODO: Fix the instruction text if we keep it like that
-        # response, presstime = keyboard.get_key(timeout=1)
 
     tracker.stop_recording()
 
