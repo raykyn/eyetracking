@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 
 import constants
+from datetime import datetime
 import random
 from pygaze import libscreen
 from pygaze import libtime
@@ -55,7 +56,7 @@ keyboard = libinput.Keyboard(keylist=['space'], timeout=None)
 # create logfile object
 log = liblog.Logfile()
 # TODO: Fill log with relevant info
-log.write(["trialnr", "trialtype", "endpos", "latency"])
+log.write(["timestamp", "trialnr", "stimulus", "startpos", "endpos", "aoi"])
 
 inscreen = libscreen.Screen()
 inscreen.draw_text(text="In the next screen fixate on the dot in the lower left corner. Then read the sentence and after reading it, press space.\n\n(press space to start)", fontsize=24)
@@ -86,7 +87,7 @@ for trialnr, stimulus in enumerate(stimuli):
     # start eye tracking
     tracker.start_recording()
     tracker.status_msg("trial {}".format(trialnr))
-    tracker.log("start_trial {} trialtype '{}'".format(trialnr, stimulus))
+    tracker.log("start_trial {} stimulus '{}'".format(trialnr, stimulus))
 
     # show stimulus
     stimulus_screen = libscreen.Screen()
@@ -113,6 +114,7 @@ for trialnr, stimulus in enumerate(stimuli):
             startpos[0], startpos[1],
             endpos[0], endpos[1]
         ))
+        log.write([datetime.now().isoformat(), trialnr, stimulus, startpos, endpos, False])
 
         # the person only needs to look approximately into the corner, so it counts 100 pixels around as well
         if endpos[0] > 1740 and endpos[1] > 900:
