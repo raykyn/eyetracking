@@ -20,10 +20,13 @@ allFonts.addFontDirectory("fonts")
 
 class Stimulus:
     def __init__(self, text):
-        if '|' in text:
-            text_before, text_of_interest, text_after = text.split('|')
-            self.text = text.replace('|', '')
-            self.chars_of_interest = (len(text_before), len(text_before) + len(text_of_interest))
+        if "|" in text:
+            text_before, text_of_interest, text_after = text.split("|")
+            self.text = text.replace("|", "")
+            self.chars_of_interest = (
+                len(text_before),
+                len(text_before) + len(text_of_interest),
+            )
         else:
             self.text = text
             self.chars_of_interest = None
@@ -40,41 +43,39 @@ stimuli = [
     Stimulus("Als |Maurerin| zu arbeiten, war schon immer ihr Traum gewesen."),
 ]
 
-"""
-import os
-from pygaze import FONTDIR
-import pygame
-font = "mono"
-fontname = os.path.join(FONTDIR, font) + ".ttf"
-font = pygame.font.Font(fontname, 24)
-print(font.size(" "))
-# 5 letters: 32px height, 70px width
-# 1 letter: 32px, 14px width
-"""
-
 
 ### experiment setup ###
 
 # start timing
 libtime.expstart()
 
-# create display object
 disp = libscreen.Display()
-
-# create eyetracker object
 tracker = eyetracker.EyeTracker(disp)
+keyboard = libinput.Keyboard(keylist=["space"], timeout=None)
 
-# create keyboard object
-keyboard = libinput.Keyboard(keylist=['space'], timeout=None)
-
-# create logfile object
+# local log for debugging
 log = liblog.Logfile()
-log.write(["timestamp", "trialnr", "stimulus", "starttime", "endtime", "startpos", "endpos", "aoi_start", "aoi_end"])
+log.write(
+    [
+        "timestamp",
+        "trialnr",
+        "stimulus",
+        "starttime",
+        "endtime",
+        "startpos",
+        "endpos",
+        "aoi_start",
+        "aoi_end",
+    ]
+)
 
 inscreen = libscreen.Screen()
-inscreen.draw_text(text="In the next screen fixate on the dot in the lower left corner. Then read the sentence and after reading it, press space.\n\n(press space to start)", fontsize=24)
+inscreen.draw_text(
+    text="In the next screen fixate on the dot in the lower left corner. Then read the sentence and after reading it, press space.\n\n(press space to start)",
+    fontsize=24,
+)
 fixscreen = libscreen.Screen()
-fixscreen.draw_fixation(fixtype='cross', pos=(80, 1000), pw=3) # lower left
+fixscreen.draw_fixation(fixtype="cross", pos=(80, 1000), pw=3)  # lower left
 
 
 ### run experiment ###
@@ -104,7 +105,14 @@ for trialnr, stimulus in enumerate(stimuli):
 
     # show stimulus
     stimulus_screen = libscreen.Screen()
-    textbox = TextBox2(pygaze.expdisplay, text=stimulus.text, font="Roboto Mono", letterHeight=24, color="black", size=(None, None))
+    textbox = TextBox2(
+        pygaze.expdisplay,
+        text=stimulus.text,
+        font="Roboto Mono",
+        letterHeight=24,
+        color="black",
+        size=(None, None),
+    )
 
     # calculate area of interest
     if stimulus.chars_of_interest is not None:
@@ -117,11 +125,19 @@ for trialnr, stimulus in enumerate(stimuli):
         aoi_center = (aoi_top_left + aoi_bottom_right) / 2
 
         # visualize area of interest
-        aoi_rect = Rect(pygaze.expdisplay, width=aoi_width, height=aoi_height, pos=aoi_center, fillColor="red")
+        aoi_rect = Rect(
+            pygaze.expdisplay,
+            width=aoi_width,
+            height=aoi_height,
+            pos=aoi_center,
+            fillColor="red",
+        )
         stimulus_screen.screen.append(aoi_rect)
 
         disp_center = np.array(constants.DISPSIZE) / 2
-        aoi = AOI("rectangle", tuple(aoi_top_left + disp_center), (aoi_width, aoi_height))
+        aoi = AOI(
+            "rectangle", tuple(aoi_top_left + disp_center), (aoi_width, aoi_height)
+        )
     else:
         aoi = None
 
@@ -141,15 +157,31 @@ for trialnr, stimulus in enumerate(stimuli):
         if aoi is not None and aoi.contains(endpos):
             tracker.log("AOI fixation ended")
             aoi_end = True
-        tracker.log("Fixation: {} ms / pos start {}, {} / pos end {}, {}".format(
-            fixation_end_time - fixation_start_time,
-            startpos[0], startpos[1],
-            endpos[0], endpos[1]
-        ))
-        log.write([datetime.now().isoformat(), trialnr, stimulus.text, fixation_start_time, fixation_end_time, startpos, endpos, aoi_start, aoi_end])
+        tracker.log(
+            "Fixation: {} ms / pos start {}, {} / pos end {}, {}".format(
+                fixation_end_time - fixation_start_time,
+                startpos[0],
+                startpos[1],
+                endpos[0],
+                endpos[1],
+            )
+        )
+        log.write(
+            [
+                datetime.now().isoformat(),
+                trialnr,
+                stimulus.text,
+                fixation_start_time,
+                fixation_end_time,
+                startpos,
+                endpos,
+                aoi_start,
+                aoi_end,
+            ]
+        )
 
         # the person only needs to look approximately into the corner, so it counts 100 pixels around as well
-        if 'space' in event.getKeys():
+        if "space" in event.getKeys():
             space_pressed = True
             event.clearEvents()
             break
