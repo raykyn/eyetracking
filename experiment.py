@@ -53,34 +53,37 @@ disp = libscreen.Display()
 tracker = eyetracker.EyeTracker(disp)
 keyboard = libinput.Keyboard(keylist=["space"], timeout=None)
 
-# local log for debugging
+# local log (mainly for debugging)
 log = liblog.Logfile()
 log.write(
     [
-        "timestamp",
+        "time",
         "trialnr",
         "stimulus",
-        "starttime",
-        "endtime",
-        "startpos",
-        "endpos",
-        "aoi_start",
-        "aoi_end",
+        "fixation_start",
+        "fixation_pos",
+        "within_aoi",
     ]
 )
 
 inscreen = libscreen.Screen()
 inscreen.draw_text(
-    text="In the next screen fixate on the dot in the lower left corner. Then read the sentence and after reading it, press space.\n\n(press space to start)",
+    text=(
+        "On the next screen look at the center of the cross on the left."
+        " Then read the sentence and after reading it, look at the dot"
+        " in the bottom right corner and press [SPACE] on the keyboard."
+        "\n\n(press [SPACE] to start)"
+    ),
     fontsize=24,
 )
 fixscreen = libscreen.Screen()
-fixscreen.draw_fixation(fixtype="cross", pos=(80, 1000), pw=3)  # lower left
+# NOTE: in dummy mode, this fixation cross is drawn over by drift_correction()
+fixscreen.draw_fixation(fixtype="cross", pos=constants.STIMULUS_START, pw=3)
 
 
 ### run experiment ###
 
-# calibrate eye tracker
+# calibrate eye tracker (doesn't do anything in dummy mode)
 tracker.calibrate()
 
 # show instructions
@@ -91,17 +94,15 @@ keyboard.get_key()
 # TODO: Practice runs
 
 for trialnr, stimulus in enumerate(stimuli):
-    # drift correction
+    # drift correction: wait for fixation
+    # (and, in a real experiment, allow interrupting for recalibration)
     checked = False
     while not checked:
         disp.fill(fixscreen)
         disp.show()
-        checked = tracker.drift_correction(pos=(80, 1000), fix_triggered=True)
-
-    # start eye tracking
-    tracker.start_recording()
-    tracker.status_msg("trial {}".format(trialnr))
-    tracker.log("start_trial {} stimulus '{}'".format(trialnr, stimulus.text))
+        checked = tracker.drift_correction(
+            pos=constants.STIMULUS_START, fix_triggered=True
+        )
 
     # show stimulus
     stimulus_screen = libscreen.Screen()
@@ -112,14 +113,19 @@ for trialnr, stimulus in enumerate(stimuli):
         letterHeight=24,
         color="black",
         size=(None, None),
+        pos=(
+            -constants.DISPSIZE[0] / 2 + constants.STIMULUS_START[0],
+            -constants.DISPSIZE[1] / 2 + constants.STIMULUS_START[1],
+        ),
+        anchor="left",
     )
 
     # calculate area of interest
     if stimulus.chars_of_interest is not None:
         coi_start = stimulus.chars_of_interest[0]
         coi_end = stimulus.chars_of_interest[1]
-        aoi_top_left = textbox.verticesPix[coi_start * 4 + 1] + (-5, -5)
-        aoi_bottom_right = textbox.verticesPix[coi_end * 4 - 1] + (5, 5)
+        aoi_top_left = textbox.verticesPix[coi_start * 4 + 1] + (-7, -15)
+        aoi_bottom_right = textbox.verticesPix[coi_end * 4 - 1] + (7, 15)
         aoi_width = aoi_bottom_right[0] - aoi_top_left[0]
         aoi_height = aoi_bottom_right[1] - aoi_top_left[1]
         aoi_center = (aoi_top_left + aoi_bottom_right) / 2
@@ -142,53 +148,47 @@ for trialnr, stimulus in enumerate(stimuli):
         aoi = None
 
     stimulus_screen.screen.append(textbox)
+    # draw "irrelevant" fixation point
+    stimulus_screen.draw_fixation(
+        fixtype="dot",
+        pos=(constants.DISPSIZE[0] - 100, constants.DISPSIZE[1] - 100),
+        pw=3,
+    )
     disp.fill(stimulus_screen)
     disp.show()
     event.clearEvents()
 
+    # start eye tracking
+    tracker.start_recording()
+    tracker.status_msg(f"trial {trialnr}")
+    logmsg = f"start_trial {trialnr} stimulus '{stimulus.text}'"
+    if aoi is not None:
+        logmsg += f" aoi x={aoi.pos[0]},y={aoi.pos[1]},w={aoi.size[0]},h={aoi.size[1]}"
+    tracker.log(logmsg)
+
     response = None
     while not response:
         fixation_start_time, startpos = tracker.wait_for_fixation_start()
-        aoi_start = aoi_end = False
-        if aoi is not None and aoi.contains(startpos):
-            tracker.log("AOI fixation started")
-            aoi_start = True
-        fixation_end_time, endpos = tracker.wait_for_fixation_end()
-        if aoi is not None and aoi.contains(endpos):
-            tracker.log("AOI fixation ended")
-            aoi_end = True
-        tracker.log(
-            "Fixation: {} ms / pos start {}, {} / pos end {}, {}".format(
-                fixation_end_time - fixation_start_time,
-                startpos[0],
-                startpos[1],
-                endpos[0],
-                endpos[1],
-            )
-        )
+        within_aoi = aoi is not None and aoi.contains(startpos)
         log.write(
             [
                 datetime.now().isoformat(),
                 trialnr,
                 stimulus.text,
                 fixation_start_time,
-                fixation_end_time,
                 startpos,
-                endpos,
-                aoi_start,
-                aoi_end,
+                within_aoi,
             ]
         )
 
-        # the person only needs to look approximately into the corner, so it counts 100 pixels around as well
+        # keypress to start next trial
         if "space" in event.getKeys():
             space_pressed = True
             event.clearEvents()
             break
 
     tracker.stop_recording()
-
-    # TODO: Fill log with relevant info
+    tracker.log(f"end_trial {trialnr}")
 
 
 # finish up
