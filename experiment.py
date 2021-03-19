@@ -214,6 +214,11 @@ for trialnr, stimulus in enumerate(stimuli):
             ]
         )
 
+        # If a regular or irregular break would occur,
+        # the code to pause and pick up the experiment again would go here
+        # The most important part would be to be able to trigger a new 
+        # calibration sequence.
+
         # keypress to start next trial
         if "space" in event.getKeys():
             space_pressed = True
