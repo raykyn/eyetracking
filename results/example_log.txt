@@ -1,0 +1,80 @@
+time	trialnr	stimulus	fixation_start	fixation_pos	within_aoi
+2021-03-19T10:27:58.376112	0	Auf der Arbeit hatte er heute eine Beförderung erhalten.	2411.9266999987303	(257.0, 548.0)	False
+2021-03-19T10:27:58.427538	0	Auf der Arbeit hatte er heute eine Beförderung erhalten.	2463.5122999970918	(257.0, 548.0)	False
+2021-03-19T10:27:58.982048	0	Auf der Arbeit hatte er heute eine Beförderung erhalten.	3017.5892999977805	(1822.0, 984.0)	False
+2021-03-19T10:27:59.034606	0	Auf der Arbeit hatte er heute eine Beförderung erhalten.	3070.177399997192	(1824.0, 983.0)	False
+2021-03-19T10:27:59.085927	0	Auf der Arbeit hatte er heute eine Beförderung erhalten.	3121.4610999959405	(1826.0, 983.0)	False
+2021-03-19T10:27:59.136779	0	Auf der Arbeit hatte er heute eine Beförderung erhalten.	3172.8361999994377	(1826.0, 982.0)	False
+2021-03-19T10:27:59.217853	0	Auf der Arbeit hatte er heute eine Beförderung erhalten.	3253.8260000001173	(1818.0, 974.0)	False
+2021-03-19T10:27:59.268649	0	Auf der Arbeit hatte er heute eine Beförderung erhalten.	3304.6796999988146	(1818.0, 974.0)	False
+2021-03-19T10:27:59.319696	0	Auf der Arbeit hatte er heute eine Beförderung erhalten.	3355.6291999993846	(1818.0, 974.0)	False
+2021-03-19T10:27:59.370868	0	Auf der Arbeit hatte er heute eine Beförderung erhalten.	3406.4215999969747	(1818.0, 974.0)	False
+2021-03-19T10:27:59.421914	0	Auf der Arbeit hatte er heute eine Beförderung erhalten.	3457.2485000026063	(1818.0, 974.0)	False
+2021-03-19T10:28:00.125553	1	Das älteste Kind hatte zuvor eine Ausbildung zum Informatiker gemacht.	4161.715199996252	(334.0, 523.0)	False
+2021-03-19T10:28:00.177601	1	Das älteste Kind hatte zuvor eine Ausbildung zum Informatiker gemacht.	4213.744799999404	(334.0, 523.0)	False
+2021-03-19T10:28:00.640934	1	Das älteste Kind hatte zuvor eine Ausbildung zum Informatiker gemacht.	4677.123200002825	(1125.0, 518.0)	False
+2021-03-19T10:28:00.693494	1	Das älteste Kind hatte zuvor eine Ausbildung zum Informatiker gemacht.	4729.6114999990095	(1126.0, 519.0)	True
+2021-03-19T10:28:00.744860	1	Das älteste Kind hatte zuvor eine Ausbildung zum Informatiker gemacht.	4780.440399998042	(1127.0, 520.0)	True
+2021-03-19T10:28:00.795671	1	Das älteste Kind hatte zuvor eine Ausbildung zum Informatiker gemacht.	4831.240599996818	(1127.0, 521.0)	True
+2021-03-19T10:28:00.846481	1	Das älteste Kind hatte zuvor eine Ausbildung zum Informatiker gemacht.	4882.035599999654	(1128.0, 521.0)	True
+2021-03-19T10:28:00.916790	1	Das älteste Kind hatte zuvor eine Ausbildung zum Informatiker gemacht.	4953.072099997371	(1128.0, 525.0)	True
+2021-03-19T10:28:01.260350	1	Das älteste Kind hatte zuvor eine Ausbildung zum Informatiker gemacht.	5295.687099998759	(1767.0, 973.0)	False
+2021-03-19T10:28:01.313078	1	Das älteste Kind hatte zuvor eine Ausbildung zum Informatiker gemacht.	5348.682700001518	(1767.0, 973.0)	False
+2021-03-19T10:28:01.474666	1	Das älteste Kind hatte zuvor eine Ausbildung zum Informatiker gemacht.	5510.239499999443	(1790.0, 975.0)	False
+2021-03-19T10:28:01.725896	1	Das älteste Kind hatte zuvor eine Ausbildung zum Informatiker gemacht.	5762.09530000051	(1815.0, 980.0)	False
+2021-03-19T10:28:02.303420	2	Es war schon dunkel, als sie das Büro verliess.	6338.9692999990075	(291.0, 556.0)	False
+2021-03-19T10:28:02.767956	2	Es war schon dunkel, als sie das Büro verliess.	6804.008300001442	(679.0, 541.0)	False
+2021-03-19T10:28:02.941157	2	Es war schon dunkel, als sie das Büro verliess.	6976.774399998249	(725.0, 542.0)	False
+2021-03-19T10:28:02.992203	2	Es war schon dunkel, als sie das Büro verliess.	7027.741400001105	(725.0, 542.0)	False
+2021-03-19T10:28:03.193425	2	Es war schon dunkel, als sie das Büro verliess.	7229.440000002796	(799.0, 542.0)	False
+2021-03-19T10:28:03.244777	2	Es war schon dunkel, als sie das Büro verliess.	7280.353100002685	(799.0, 542.0)	False
+2021-03-19T10:28:03.295592	2	Es war schon dunkel, als sie das Büro verliess.	7331.153200000699	(799.0, 542.0)	False
+2021-03-19T10:28:03.346639	2	Es war schon dunkel, als sie das Büro verliess.	7381.9851000007475	(800.0, 542.0)	False
+2021-03-19T10:28:03.668931	2	Es war schon dunkel, als sie das Büro verliess.	7704.39549999719	(1816.0, 913.0)	False
+2021-03-19T10:28:03.872144	2	Es war schon dunkel, als sie das Büro verliess.	7907.8605999966385	(1851.0, 965.0)	False
+2021-03-19T10:28:04.058079	2	Es war schon dunkel, als sie das Büro verliess.	8094.214400000055	(1824.0, 976.0)	False
+2021-03-19T10:28:04.786772	3	Wenn ich noch mehr arbeite, habe ich bald ein Burnout.	8822.725600002741	(324.0, 553.0)	False
+2021-03-19T10:28:04.849626	3	Wenn ich noch mehr arbeite, habe ich bald ein Burnout.	8885.227799997665	(313.0, 548.0)	False
+2021-03-19T10:28:04.900779	3	Wenn ich noch mehr arbeite, habe ich bald ein Burnout.	8936.34149999707	(313.0, 547.0)	False
+2021-03-19T10:28:05.173026	3	Wenn ich noch mehr arbeite, habe ich bald ein Burnout.	9208.459200002835	(710.0, 537.0)	False
+2021-03-19T10:28:05.225047	3	Wenn ich noch mehr arbeite, habe ich bald ein Burnout.	9261.122399999294	(710.0, 537.0)	False
+2021-03-19T10:28:05.276346	3	Wenn ich noch mehr arbeite, habe ich bald ein Burnout.	9311.887199997727	(710.0, 537.0)	False
+2021-03-19T10:28:05.327112	3	Wenn ich noch mehr arbeite, habe ich bald ein Burnout.	9362.689900000987	(710.0, 537.0)	False
+2021-03-19T10:28:05.378158	3	Wenn ich noch mehr arbeite, habe ich bald ein Burnout.	9413.599400002568	(712.0, 537.0)	False
+2021-03-19T10:28:05.800751	3	Wenn ich noch mehr arbeite, habe ich bald ein Burnout.	9836.751900002128	(1907.0, 985.0)	False
+2021-03-19T10:28:06.124397	3	Wenn ich noch mehr arbeite, habe ich bald ein Burnout.	10160.244099999545	(1828.0, 992.0)	False
+2021-03-19T10:28:06.176554	3	Wenn ich noch mehr arbeite, habe ich bald ein Burnout.	10212.6167000024	(1828.0, 992.0)	False
+2021-03-19T10:28:06.227443	3	Wenn ich noch mehr arbeite, habe ich bald ein Burnout.	10263.46619999822	(1828.0, 992.0)	False
+2021-03-19T10:28:06.750924	4	Meine Mechanikerin hat versprochen, mich morgen anzurufen.	10787.031699997897	(315.0, 571.0)	False
+2021-03-19T10:28:06.874038	4	Meine Mechanikerin hat versprochen, mich morgen anzurufen.	10909.54690000217	(332.0, 567.0)	False
+2021-03-19T10:28:06.924084	4	Meine Mechanikerin hat versprochen, mich morgen anzurufen.	10960.355199997139	(332.0, 565.0)	False
+2021-03-19T10:28:07.126276	4	Meine Mechanikerin hat versprochen, mich morgen anzurufen.	11162.014399997133	(494.0, 540.0)	True
+2021-03-19T10:28:07.176886	4	Meine Mechanikerin hat versprochen, mich morgen anzurufen.	11212.878599995747	(494.0, 540.0)	True
+2021-03-19T10:28:07.227932	4	Meine Mechanikerin hat versprochen, mich morgen anzurufen.	11263.719700000365	(494.0, 540.0)	True
+2021-03-19T10:28:07.279044	4	Meine Mechanikerin hat versprochen, mich morgen anzurufen.	11314.515699996264	(494.0, 540.0)	True
+2021-03-19T10:28:08.081501	5	Als Coiffeur zu arbeiten, war schon immer sein Traum gewesen	12116.889099997934	(273.0, 546.0)	False
+2021-03-19T10:28:08.133548	5	Als Coiffeur zu arbeiten, war schon immer sein Traum gewesen	12169.6712999983	(272.0, 542.0)	False
+2021-03-19T10:28:08.496878	5	Als Coiffeur zu arbeiten, war schon immer sein Traum gewesen	12532.399499999883	(517.0, 549.0)	False
+2021-03-19T10:28:08.921264	5	Als Coiffeur zu arbeiten, war schon immer sein Traum gewesen	12956.958900002064	(1153.0, 540.0)	False
+2021-03-19T10:28:08.973923	5	Als Coiffeur zu arbeiten, war schon immer sein Traum gewesen	13009.422299997823	(1153.0, 540.0)	False
+2021-03-19T10:28:09.023968	5	Als Coiffeur zu arbeiten, war schon immer sein Traum gewesen	13060.250499998801	(1153.0, 540.0)	False
+2021-03-19T10:28:09.366747	5	Als Coiffeur zu arbeiten, war schon immer sein Traum gewesen	13402.744099999836	(1777.0, 974.0)	False
+2021-03-19T10:28:09.418796	5	Als Coiffeur zu arbeiten, war schon immer sein Traum gewesen	13454.935699999623	(1776.0, 974.0)	False
+2021-03-19T10:28:09.470187	5	Als Coiffeur zu arbeiten, war schon immer sein Traum gewesen	13505.785100001958	(1776.0, 974.0)	False
+2021-03-19T10:28:09.601306	5	Als Coiffeur zu arbeiten, war schon immer sein Traum gewesen	13637.038399996527	(1803.0, 985.0)	False
+2021-03-19T10:28:09.651881	5	Als Coiffeur zu arbeiten, war schon immer sein Traum gewesen	13687.917299997935	(1803.0, 985.0)	False
+2021-03-19T10:28:09.914118	5	Als Coiffeur zu arbeiten, war schon immer sein Traum gewesen	13950.373799998488	(1582.0, 914.0)	False
+2021-03-19T10:28:11.065822	6	Er war verärgert, denn er hatte die Bestellung schon vor drei Tagen bei der Floristin in Auftrag gegeben.	15101.994299999205	(342.0, 546.0)	False
+2021-03-19T10:28:11.138890	6	Er war verärgert, denn er hatte die Bestellung schon vor drei Tagen bei der Floristin in Auftrag gegeben.	15174.199599998246	(301.0, 533.0)	False
+2021-03-19T10:28:11.188936	6	Er war verärgert, denn er hatte die Bestellung schon vor drei Tagen bei der Floristin in Auftrag gegeben.	15225.046499996097	(301.0, 533.0)	False
+2021-03-19T10:28:12.064034	6	Er war verärgert, denn er hatte die Bestellung schon vor drei Tagen bei der Floristin in Auftrag gegeben.	16100.29509999731	(1181.0, 543.0)	False
+2021-03-19T10:28:12.844259	7	Schon wieder hatte die Schule angerufen, weil sein Sohn Probleme gemacht hatte.	16879.734000001918	(305.0, 555.0)	False
+2021-03-19T10:28:12.906318	7	Schon wieder hatte die Schule angerufen, weil sein Sohn Probleme gemacht hatte.	16942.492700000003	(270.0, 548.0)	False
+2021-03-19T10:28:14.063384	7	Schon wieder hatte die Schule angerufen, weil sein Sohn Probleme gemacht hatte.	18099.548300000606	(1799.0, 973.0)	False
+2021-03-19T10:28:14.115433	7	Schon wieder hatte die Schule angerufen, weil sein Sohn Probleme gemacht hatte.	18151.4623999974	(1799.0, 973.0)	False
+2021-03-19T10:28:14.166706	7	Schon wieder hatte die Schule angerufen, weil sein Sohn Probleme gemacht hatte.	18202.272800001083	(1799.0, 973.0)	False
+2021-03-19T10:28:14.217499	7	Schon wieder hatte die Schule angerufen, weil sein Sohn Probleme gemacht hatte.	18253.07349999639	(1799.0, 973.0)	False
+2021-03-19T10:28:14.268545	7	Schon wieder hatte die Schule angerufen, weil sein Sohn Probleme gemacht hatte.	18303.917500001262	(1800.0, 974.0)	False
+2021-03-19T10:28:14.359628	7	Schon wieder hatte die Schule angerufen, weil sein Sohn Probleme gemacht hatte.	18394.953499999247	(1810.0, 984.0)	False
+2021-03-19T10:28:14.409673	7	Schon wieder hatte die Schule angerufen, weil sein Sohn Probleme gemacht hatte.	18445.760399998107	(1813.0, 985.0)	False
+2021-03-19T10:28:14.460720	7	Schon wieder hatte die Schule angerufen, weil sein Sohn Probleme gemacht hatte.	18496.568099995784	(1814.0, 985.0)	False

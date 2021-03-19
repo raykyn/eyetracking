@@ -44,10 +44,12 @@ class Stimulus:
 ### decide which stimuli to show ###
 participant_id = int(sys.argv[1])
 DATA_FOLDER = "./data/"
+RESULT_FOLDER = "./results/"  # for log files in dummy mode testing
 
 # load latin square
 with open(os.path.join(DATA_FOLDER, "latin_square.tsv"), encoding="utf8") as lq:
     item_lists = lq.readlines()
+    # right now, first participant should be number 0, if we want to start at 1, we just need to modify the next line by -1
     participant_list = item_lists[participant_id % 4].split("\t")
 
 # load trial items
@@ -86,7 +88,7 @@ tracker = eyetracker.EyeTracker(disp)
 keyboard = libinput.Keyboard(keylist=["space"], timeout=None)
 
 # local log (mainly for debugging)
-log = liblog.Logfile()
+log = liblog.Logfile(filename=os.path.join(RESULT_FOLDER, "participant_{:04d}".format(participant_id)))
 log.write(
     [
         "time",
