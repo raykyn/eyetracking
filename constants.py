@@ -37,6 +37,8 @@ MOUSEVISIBLE = False # mouse visibility
 BGC = (125,125,125,255) # backgroundcolour
 FGC = (0,0,0,255) # foregroundcolour
 
+STIMULUS_START = (300, DISPSIZE[1] / 2)
+
 # SOUND
 # defaults used in libsound. The values may be adjusted, but not the constants'
 # names
