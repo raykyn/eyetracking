@@ -1,8 +1,18 @@
 #! /usr/bin/python3
 
+"""
+Use like this:
+python3 experiment.py {participant-id}
+participant-id must be a number.
+"""
+
+import csv
 import constants
 import numpy as np
 import pygaze
+import os
+from random import shuffle
+import sys
 from datetime import datetime
 from pygaze import libscreen
 from pygaze import libtime
@@ -16,7 +26,6 @@ from psychopy.visual.rect import Rect
 
 
 allFonts.addFontDirectory("fonts")
-
 
 class Stimulus:
     def __init__(self, text):
@@ -32,16 +41,39 @@ class Stimulus:
             self.chars_of_interest = None
 
 
-### for testing ###
-stimuli = [
-    Stimulus("Meine |Sekretärin| hat versprochen, mich morgen anzurufen."),
-    Stimulus("Auf der Arbeit hatte er heute eine Beförderung erhalten."),
-    Stimulus("Das älteste Kind hatte zuvor eine Ausbildung zum |Informatiker| gemacht."),
-    Stimulus("Schon wieder hatte die Schule ihn angerufen, weil sein Sohn Probleme gemacht hatte."),
-    Stimulus("Er war verärgert, denn er hatte die Bestellung schon vor drei Tagen bei dem |Florist| in Auftrag gegeben."),
-    Stimulus("Wenn ich noch mehr arbeite, habe ich bald ein Burnout."),
-    Stimulus("Als |Maurerin| zu arbeiten, war schon immer ihr Traum gewesen."),
-]
+### decide which stimuli to show ###
+participant_id = int(sys.argv[1])
+DATA_FOLDER = "./data/"
+
+# load latin square
+with open(os.path.join(DATA_FOLDER, "latin_square.tsv"), encoding="utf8") as lq:
+    item_lists = lq.readlines()
+    participant_list = item_lists[participant_id % 4].split("\t")
+
+# load trial items
+trial_items = {}
+with open(os.path.join(DATA_FOLDER, "stimuli.tsv"), encoding="utf8") as stimulus_data:
+    stimulus_rows = csv.DictReader(stimulus_data, delimiter="\t")
+    for row in stimulus_rows:
+        trial_items[int(row["Item"])] = row
+
+# load filler items
+filler_items = {}
+with open(os.path.join(DATA_FOLDER, "filler.tsv"), encoding="utf8") as filler_data:
+    filler_rows = csv.reader(filler_data, delimiter="\t")
+    for row in filler_rows:
+        filler_items[int(row[0])] = row[1]
+
+# fill stimuli list
+stimuli = []
+for item in participant_list:
+    itemNr, condition = item.split("/")
+    if itemNr == "F":  # filler
+        stimulus = filler_items[int(condition)]
+    else:
+        stimulus = trial_items[int(itemNr)]["Stimulus"].format(*trial_items[int(itemNr)][condition].split(","))
+    stimuli.append(Stimulus(stimulus))
+shuffle(stimuli)  # make it random
 
 
 ### experiment setup ###
@@ -131,6 +163,7 @@ for trialnr, stimulus in enumerate(stimuli):
         aoi_center = (aoi_top_left + aoi_bottom_right) / 2
 
         # visualize area of interest
+        # TODO: Only show this when in DUMMY-Mode
         aoi_rect = Rect(
             pygaze.expdisplay,
             width=aoi_width,
