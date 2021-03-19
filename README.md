@@ -8,7 +8,9 @@ This is an implementation of the experiment described in this document: https://
 ## How to?
 For each participant practice.py is run first to let them know what to do during the experiment and answer possible questions.
 The actual trial is run by executing:
+```
 $ python3 experiment.py {participant-id}
+```
 Where participant-id is a number.
 
 In dummy mode, the fixation information is written to the results/ folder.
