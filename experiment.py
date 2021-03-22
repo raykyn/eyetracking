@@ -110,14 +110,6 @@ inscreen.draw_text(
     ),
     fontsize=24,
 )
-breakscreen = libscreen.Screen()
-breakscreen.draw_text(
-    text=(
-        "The experiment is paused at the moment."
-        "\n\n(press [SPACE] to calibrate again)"
-    ),
-    fontsize=24,
-)
 fixscreen = libscreen.Screen()
 # NOTE: in dummy mode, this fixation cross is drawn over by drift_correction()
 fixscreen.draw_fixation(fixtype="cross", pos=constants.STIMULUS_START, pw=3)
