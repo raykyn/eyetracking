@@ -133,17 +133,7 @@ disp.fill(inscreen)
 disp.show()
 keyboard.get_key()
 
-recalibration_needed = False
-
 for trialnr, stimulus in enumerate(stimuli):
-
-    # recalibration after break
-    if recalibration_needed:
-        disp.fill(breakscreen)
-        disp.show()
-        keyboard.get_key()
-        tracker.calibrate()
-        recalibration_needed = False
 
     # drift correction: wait for fixation
     checked = False
@@ -151,8 +141,14 @@ for trialnr, stimulus in enumerate(stimuli):
         disp.fill(fixscreen)
         disp.show()
         checked = tracker.drift_correction(
-            pos=constants.STIMULUS_START, fix_triggered=True
+            pos=constants.STIMULUS_START
         )
+    # the experimenter can also trigger a break during the drift correction
+    # he can do so by pressing "q" or "escape"
+    # NOTE: We don't know exactly if an instruction screen is part of the calibration
+    # if it isn't, we would implement an earlier trigger the experimenter can use to trigger
+    # a break after the participant has finished a sentence and then show a break screen
+    # that can be passed by pressing another button again.
 
     # show stimulus
     stimulus_screen = libscreen.Screen()
@@ -235,14 +231,6 @@ for trialnr, stimulus in enumerate(stimuli):
 
         # keypress to start next trial
         if "space" in event.getKeys():
-            event.clearEvents()
-            break
-        # keypress to trigger a new calibration before next trial
-        # the experimenter should trigger this, either at half of the items
-        # or when participant requests it.
-        # TODO: Why aren't the keys recognized?
-        elif "esc" in event.getKeys() or "tab" in event.getKeys():
-            recalibration_needed = True
             event.clearEvents()
             break
     tracker.stop_recording()
