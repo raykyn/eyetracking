@@ -125,11 +125,16 @@ disp.fill(inscreen)
 disp.show()
 keyboard.get_key()
 
-# TODO: Practice runs
+recalibration_needed = False
 
 for trialnr, stimulus in enumerate(stimuli):
+
+    # recalibration after break
+    if recalibration_needed:
+        tracker.calibrate()
+        recalibration_needed = False
+
     # drift correction: wait for fixation
-    # (and, in a real experiment, allow interrupting for recalibration)
     checked = False
     while not checked:
         disp.fill(fixscreen)
@@ -165,7 +170,6 @@ for trialnr, stimulus in enumerate(stimuli):
         aoi_center = (aoi_top_left + aoi_bottom_right) / 2
 
         # visualize area of interest
-        # TODO: Only show this when in DUMMY-Mode
         aoi_rect = Rect(
             pygaze.expdisplay,
             width=aoi_width,
@@ -173,7 +177,9 @@ for trialnr, stimulus in enumerate(stimuli):
             pos=aoi_center,
             fillColor="red",
         )
-        stimulus_screen.screen.append(aoi_rect)
+        # only show the AOI in red when in Dummy (debug) mode
+        if constants.DUMMYMODE:
+            stimulus_screen.screen.append(aoi_rect)
 
         disp_center = np.array(constants.DISPSIZE) / 2
         aoi = AOI(
@@ -216,17 +222,18 @@ for trialnr, stimulus in enumerate(stimuli):
             ]
         )
 
-        # If a regular or irregular break would occur,
-        # the code to pause and pick up the experiment again would go here
-        # The most important part would be to be able to trigger a new 
-        # calibration sequence.
-
         # keypress to start next trial
         if "space" in event.getKeys():
-            space_pressed = True
             event.clearEvents()
             break
-
+        # keypress to trigger a new calibration before next trial
+        # the experimenter should trigger this, either at half of the items
+        # or when participant requests it.
+        # TODO: Why aren't the keys recognized?
+        elif "esc" in event.getKeys() or "tab" in event.getKeys():
+            recalibration_needed = True
+            event.clearEvents()
+            break
     tracker.stop_recording()
     tracker.log(f"end_trial {trialnr}")
 
