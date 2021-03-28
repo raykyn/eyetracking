@@ -1,3 +1,4 @@
+import argparse
 import csv
 import math
 import sys
@@ -91,31 +92,43 @@ def read_trials(file: TextIO) -> Iterator[List[DataPoint]]:
         trial.append((int(time), float(x_left), float(y_left)))
 
 
-DETECTION = "velocity"
-SAMPLING_FREQ = 60  # TODO: Take this as command line input
-# NOTE: The maximum velocity parameter is highly dependent on the sampling frequency (as mentioned in the paper)
-MAX_VELOCITY = 5  # the maximum velocity in pixels per millisecond to detect a fixation in velocity mode
+def read_parameters():
+    parser = argparse.ArgumentParser(description='Apply dispersion or velocity-based algorithms to a eyegaze dataset and visualize results.')
+    parser.add_argument("--mode", default="dispersion", choices=["dispersion", "velocity"], help="Algorithm used for detection.")
+    parser.add_argument("--freq", type=int, help="Sampling frequency of given dataset. Required for velocity-based algorithm.")
+    parser.add_argument("--threshold", type=float, help="Maximum velocity threshold to differenciate saccades from fixations. Required for velocity-based algorithm.")
 
-trials = read_trials(sys.stdin)
-for i, trial in enumerate(trials):
-    fig, ax = plt.subplots()
-    ax.invert_yaxis()
+    return vars(parser.parse_args())
 
-    xs = [x for time, x, y in trial]
-    ys = [y for time, x, y in trial]
-    ax.plot(xs, ys, color="red")
+if __name__ == "__main__":
+    args = read_parameters()
 
-    if DETECTION == "dispersion":
-        fixations = list(dispersion_based_fixations(trial, 20.0, 10))
-    elif DETECTION == "velocity":
-        fixations = list(velocity_based_fixations(trial, MAX_VELOCITY, 1000 / SAMPLING_FREQ))
-    else:
-        print(f"Detection mode {DETECTION} not recognized.")
+    trials = read_trials(sys.stdin)
+    for i, trial in enumerate(trials):
+        fig, ax = plt.subplots()
+        ax.invert_yaxis()
 
-    xs = [x for start_time, end_time, x, y in fixations]
-    ys = [y for start_time, end_time, x, y in fixations]
-    ax.plot(xs, ys, color="blue")
-    for start_time, end_time, x, y in fixations:
-        c = plt.Circle((x, y), radius=(end_time - start_time) / 100, color="blue")
-        ax.add_patch(c)
-    plt.savefig(f"trial{i}.png")
+        xs = [x for time, x, y in trial]
+        ys = [y for time, x, y in trial]
+        ax.plot(xs, ys, color="red")
+
+        if args["mode"] == "dispersion":
+            fixations = list(dispersion_based_fixations(trial, 20.0, 10))
+        elif args["mode"] == "velocity":
+            # NOTE: The maximum velocity parameter is highly dependent on the sampling frequency (as mentioned in the paper)
+            try:
+                fixations = list(velocity_based_fixations(trial, args["threshold"], 1000 / args["freq"]))
+            except TypeError:
+                print("Velocity-based mode needs optional arguments 'threshold' and 'freq'! See --help for more.")
+                exit()
+        else:
+            mode = args["mode"]
+            print(f"Detection mode {mode} not recognized.")
+
+        xs = [x for start_time, end_time, x, y in fixations]
+        ys = [y for start_time, end_time, x, y in fixations]
+        ax.plot(xs, ys, color="blue")
+        for start_time, end_time, x, y in fixations:
+            c = plt.Circle((x, y), radius=(end_time - start_time) / 100, color="blue")
+            ax.add_patch(c)
+        plt.savefig(f"trial{i}.png")
