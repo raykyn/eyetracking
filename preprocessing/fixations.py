@@ -74,22 +74,28 @@ def velocity_based_fixations(
         last_point = point
 
 
-def read_trials(file: TextIO) -> Iterator[List[DataPoint]]:
-    reader = csv.reader(file)
-    # Skip header
-    next(reader)
+def read_trials(file: TextIO, eye: str) -> Iterator[List[DataPoint]]:
+    reader = csv.DictReader(file)
     trial = []
     current_trial_id = None
-    for trial_id, _, time, x_left, y_left, _, x_right, y_right, _ in reader:
+
+    if eye == "left":
+        x = "x_left"
+        y = "y_left"
+    else:
+        x = "x_right"
+        y = "y_right"
+
+    for row in reader:
         # Skip missing data points
-        if not x_left or not y_left:
+        if not row[x] or not row[y]:
             continue
-        if trial_id != current_trial_id:
+        if row["trialId"] != current_trial_id:
             if current_trial_id is not None:
-                yield trial
+                yield (current_trial_id, trial)
             trial = []
-            current_trial_id = trial_id
-        trial.append((int(time), float(x_left), float(y_left)))
+            current_trial_id = row["trialId"]
+        trial.append((int(row["time"]), float(row[x]), float(row[y])))
 
 
 def read_parameters():
@@ -97,14 +103,15 @@ def read_parameters():
     parser.add_argument("--mode", default="dispersion", choices=["dispersion", "velocity"], help="Algorithm used for detection.")
     parser.add_argument("--freq", type=int, help="Sampling frequency of given dataset. Required for velocity-based algorithm.")
     parser.add_argument("--threshold", type=float, help="Maximum velocity threshold to differenciate saccades from fixations. Required for velocity-based algorithm.")
+    parser.add_argument("--eye", default="right", choices=["left", "right"], help="Which eye should be tracked and visualized?")
 
     return vars(parser.parse_args())
 
 if __name__ == "__main__":
     args = read_parameters()
 
-    trials = read_trials(sys.stdin)
-    for i, trial in enumerate(trials):
+    trials = read_trials(sys.stdin, args["eye"])
+    for tid, trial in trials:
         fig, ax = plt.subplots()
         ax.invert_yaxis()
 
@@ -131,4 +138,4 @@ if __name__ == "__main__":
         for start_time, end_time, x, y in fixations:
             c = plt.Circle((x, y), radius=(end_time - start_time) / 100, color="blue")
             ax.add_patch(c)
-        plt.savefig(f"trial{i}.png")
+        plt.savefig(f"trial{tid}.png")
