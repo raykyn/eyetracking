@@ -1,4 +1,5 @@
 import csv
+import math
 import sys
 from typing import List, TextIO, Iterator, Tuple
 
@@ -40,6 +41,38 @@ def dispersion_based_fixations(
             break
 
 
+def velocity_based_fixations(
+    points: List[DataPoint], max_velocity: float, time_diff: float
+) -> Iterator[Fixation]:
+    last_point = [None, None, None]
+    current_fixation = ()
+
+    for point in iter(points):
+        if not last_point[0]:
+            last_point = point
+            continue
+        
+        distance = math.sqrt((point[1] - last_point[1])**2 + (point[2] - last_point[2])**2)
+        # time_diff = point[0] - last_point[0]  # could also give sampling freq as constant instead
+        # NOTE: Time diff depends on the dataset and is given as a constant now instead
+        velocity = distance / time_diff
+
+        if velocity < max_velocity:
+            if current_fixation:
+                # NOTE: What should the position of the fixation be? Currently set to last point.
+                current_fixation = (current_fixation[0], point[0], point[1], point[2])
+            else:
+                # NOTE: What should the position of the fixation be? Currently set to the end point.
+                current_fixation = (last_point[0], point[0], point[1], point[2])
+        else:
+            if current_fixation:
+                yield current_fixation
+                current_fixation = ()
+            # NOTE: Do nothing if it's a saccade?
+
+        last_point = point
+
+
 def read_trials(file: TextIO) -> Iterator[List[DataPoint]]:
     reader = csv.reader(file)
     # Skip header
@@ -58,6 +91,11 @@ def read_trials(file: TextIO) -> Iterator[List[DataPoint]]:
         trial.append((int(time), float(x_left), float(y_left)))
 
 
+DETECTION = "velocity"
+SAMPLING_FREQ = 60  # TODO: Take this as command line input
+# NOTE: The maximum velocity parameter is highly dependent on the sampling frequency (as mentioned in the paper)
+MAX_VELOCITY = 5  # the maximum velocity in pixels per millisecond to detect a fixation in velocity mode
+
 trials = read_trials(sys.stdin)
 for i, trial in enumerate(trials):
     fig, ax = plt.subplots()
@@ -67,7 +105,13 @@ for i, trial in enumerate(trials):
     ys = [y for time, x, y in trial]
     ax.plot(xs, ys, color="red")
 
-    fixations = list(dispersion_based_fixations(trial, 20.0, 10))
+    if DETECTION == "dispersion":
+        fixations = list(dispersion_based_fixations(trial, 20.0, 10))
+    elif DETECTION == "velocity":
+        fixations = list(velocity_based_fixations(trial, MAX_VELOCITY, 1000 / SAMPLING_FREQ))
+    else:
+        print(f"Detection mode {DETECTION} not recognized.")
+
     xs = [x for start_time, end_time, x, y in fixations]
     ys = [y for start_time, end_time, x, y in fixations]
     ax.plot(xs, ys, color="blue")
