@@ -1,0 +1,14 @@
+How does the 60Hz-Dataset compare to the 2000Hz Dataset?
+
+Dispersion-based Algorithm:
+Finding the correct thresholds (especially because you need to find 2) is much harder
+when using the high-frequency dataset compared to the low frequency dataset.
+Our runs on the high-frequency dataset either ended in the fixations following exactly
+the data points or in blobbing together to a single or a few huge fixation points.
+
+Velocity-based Algorithm:
+How the data points are labelled is highly dependent on the velocity threshold
+chosen by the researcher. In our example, a threshold of 1 (px/ms) does okay to
+differentiate between saccades and fixations on the 60Hz dataset, but is far
+too low for the 2000Hz dataset and results in labelling too many datapoints as fixations.
+
