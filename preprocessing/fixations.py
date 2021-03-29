@@ -46,7 +46,7 @@ def velocity_based_fixations(
     points: List[DataPoint], max_velocity: float, time_diff: float
 ) -> Iterator[Fixation]:
     last_point = [None, None, None]
-    current_fixation = ()
+    current_fixations = []
 
     for point in iter(points):
         if not last_point[0]:
@@ -54,28 +54,24 @@ def velocity_based_fixations(
             continue
         
         distance = math.sqrt((point[1] - last_point[1])**2 + (point[2] - last_point[2])**2)
-        # time_diff = point[0] - last_point[0]  # could also give sampling freq as constant instead
-        # NOTE: Time diff depends on the dataset and is given as a constant now instead
         velocity = distance / time_diff
 
         if velocity < max_velocity:
-            if current_fixation:
-                # NOTE: What should the position of the fixation be? Currently set to last point.
-                current_fixation = (current_fixation[0], point[0], point[1], point[2])
+            if current_fixations:
+                current_fixations.append((point[0], point[1], point[2]))
             else:
-                # NOTE: What should the position of the fixation be? Currently set to the end point.
-                current_fixation = (last_point[0], point[0], point[1], point[2])
+                current_fixations.append((last_point[0], last_point[1], last_point[2]))
+                current_fixations.append((point[0], point[1], point[2]))
         else:
-            if current_fixation:
-                yield current_fixation
-                current_fixation = ()
+            if current_fixations:
+                yield (current_fixations[0][0], current_fixations[-1][0], *centroid(current_fixations))
+                current_fixations = []
             # NOTE: Do nothing if it's a saccade?
-
         last_point = point
 
-    if current_fixation:
-        yield current_fixation
-        current_fixation = ()
+    if current_fixations:
+        yield (current_fixations[0][0], current_fixations[-1][0], *centroid(current_fixations))
+        current_fixations = []
 
 
 def read_trials(file: TextIO, eye: str) -> Iterator[List[DataPoint]]:
@@ -129,7 +125,8 @@ if __name__ == "__main__":
             # NOTE: The maximum velocity parameter is highly dependent on the sampling frequency (as mentioned in the paper)
             try:
                 fixations = list(velocity_based_fixations(trial, args["threshold"], 1000 / args["freq"]))
-            except TypeError:
+            except TypeError as e:
+                # print(e)
                 print("Velocity-based mode needs optional arguments 'threshold' and 'freq'! See --help for more.")
                 exit()
         else:
