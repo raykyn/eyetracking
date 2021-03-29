@@ -73,6 +73,10 @@ def velocity_based_fixations(
 
         last_point = point
 
+    if current_fixation:
+        yield current_fixation
+        current_fixation = ()
+
 
 def read_trials(file: TextIO, eye: str) -> Iterator[List[DataPoint]]:
     reader = csv.DictReader(file)
