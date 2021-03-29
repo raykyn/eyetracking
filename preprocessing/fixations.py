@@ -40,6 +40,8 @@ def dispersion_based_fixations(
                 del window[0]
         except StopIteration:
             break
+    if len(window) >= duration_threshold:
+        yield (window[0][0], window[-1][0], *centroid(window))
 
 
 def velocity_based_fixations(
@@ -101,8 +103,8 @@ def read_trials(file: TextIO, eye: str) -> Iterator[List[DataPoint]]:
 def read_parameters():
     parser = argparse.ArgumentParser(description='Apply dispersion or velocity-based algorithms to a eyegaze dataset and visualize results.')
     parser.add_argument("--mode", default="dispersion", choices=["dispersion", "velocity"], help="Algorithm used for detection.")
-    parser.add_argument("--freq", type=int, help="Sampling frequency of given dataset. Required for velocity-based algorithm.")
-    parser.add_argument("--threshold", type=float, help="Maximum velocity threshold to differenciate saccades from fixations. Required for velocity-based algorithm.")
+    parser.add_argument("--freq", type=int, required=True, help="Sampling frequency of given dataset. Required for velocity-based algorithm.")
+    parser.add_argument("--threshold", type=float, required=True, help="Dispersion threshold for dispersion-based mode. Maximum velocity threshold to differenciate saccades from fixations for velocity-based mode.")
     parser.add_argument("--eye", default="right", choices=["left", "right"], help="Which eye should be tracked and visualized?")
 
     return vars(parser.parse_args())
@@ -120,7 +122,7 @@ if __name__ == "__main__":
         ax.plot(xs, ys, color="red")
 
         if args["mode"] == "dispersion":
-            fixations = list(dispersion_based_fixations(trial, 20.0, 10))
+            fixations = list(dispersion_based_fixations(trial, args["threshold"], 0.2 / args["freq"]))
         elif args["mode"] == "velocity":
             # NOTE: The maximum velocity parameter is highly dependent on the sampling frequency (as mentioned in the paper)
             try:
