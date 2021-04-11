@@ -89,6 +89,7 @@ d <- read.table(file='dataJMVV.txt', sep = '\t')
 # -0.04718788 -0.05185185 -0.05292479
 ########################################################
 head(d, 3)
+d$cond <- factor(d$cond)
 summary(d$cond)
 length(unique(d$subj))
 length(unique(d$item))
@@ -129,7 +130,7 @@ X_H <- matrix(c(1/8,1/8,1/8,1/8,1/8,1/8,1/8,1/8,     # Intercept
                 -1/4,-1/4,1/4,1/4,1/4,1/4,-1/4,-1/4, # Grammaticality x Dependency
                 -1/4,1/4,-1/4,1/4,-1/4,1/4,-1/4,1/4, # Interference x Grammaticality
                 1/4,-1/4,-1/4,1/4,-1/4,1/4,1/4,-1/4, # Interference x Dependency type
-                -1/4,1/4,-1/4,1/4,1/4,-1/4,-1/4,1/4 # Interference x Grammaticality x Dependency # NOTE: Is it really just multiplying?
+                -1/4,1/4,-1/4,1/4,1/4,-1/4,1/4,-1/4 # Interference x Grammaticality x Dependency # NOTE: Is it really just multiplying?
 ), byrow=TRUE, nrow = 8)
 
 # Compute the inverse of X_H
@@ -149,8 +150,7 @@ X_C_bar <- X_C[,2:ncol(X_C)]
 
 # Apply the contrasts to the cond column
 ########################################################
-# contrasts(d_crit$cond) <- X_C_bar
-# NOTE: Nothing happened? do we need to assign the value?
+contrasts(d_crit$cond) <- X_C_bar
 ########################################################
 
 
@@ -159,16 +159,16 @@ X_C_bar <- X_C[,2:ncol(X_C)]
 # OR: 
 # Alternative: code contrasts as numerical columns in the dataframe and use these as predictors in the model
 
-# NOTE: Why do we use d and not d_crit here?
+# NOTE: Why did they use d and not d_crit here?
 d_crit$Dep <- ifelse(d_crit$cond %in% c('a', 'b', 'c', 'd'), .5, -.5) # main effect of dependency type: agr=0.5, refl=-0.5
-d_crit$Gram <- ifelse(d_crit$cond %in% c('a', 'b', 'e', 'f'), -.5, .5) # main effect of grammaticality: gram=-.5, ungram=.5  # NOTE: Why -.5 when it's positive in the matrix, unrelated?
+d_crit$Gram <- ifelse(d_crit$cond %in% c('a', 'b', 'e', 'f'), -.5, .5) # main effect of grammaticality: gram=-.5, ungram=.5
 # ... add the other contrasts
 ########################################################
 d_crit$Int <- ifelse(d_crit$cond %in% c('a', 'd', 'e', 'h'), .5, -.5)
 d_crit$Gram_x_Dep <- ifelse(d_crit$cond %in% c('c', 'd', 'e', 'f'), .5, -.5)
 d_crit$Int_x_Gram <- ifelse(d_crit$cond %in% c('b', 'd', 'f', 'h'), .5, -.5)
 d_crit$Int_x_Dep <- ifelse(d_crit$cond %in% c('a', 'd', 'f', 'g'), .5, -.5)
-d_crit$Int_x_Gram_x_Dep <- ifelse(d_crit$cond %in% c('b', 'd', 'e', 'h'), .5, -.5)
+d_crit$Int_x_Gram_x_Dep <- ifelse(d_crit$cond %in% c('b', 'd', 'e', 'g'), .5, -.5)
 ########################################################
 
 #--------------------------------------------------------
@@ -187,6 +187,7 @@ d_crit_tft <- d_crit[d_crit$TFT != 0, ]
 # Fit a linear mixed model with log transformed total fixation times as dependent variable and the above defined contrasts as predictor variables (independent variables)
 library(lme4)
 ########################################################
+# With contrasts coded as columns:
 m <- lmer(log(TFT)~
             Dep+
             Gram+
@@ -199,7 +200,8 @@ m <- lmer(log(TFT)~
             (1|item),
             data=d_crit_tft)
 ########################################################
-# m<- lmer(log(TFT)~cond+(1|subj)+(1|item), data=d_crit_tft)
+# With contrasts coded using contrasts():
+m <- lmer(log(TFT)~cond+(1|subj)+(1|item), data=d_crit_tft)
 summary(m)
 
 # Interpret the model output verbally.
