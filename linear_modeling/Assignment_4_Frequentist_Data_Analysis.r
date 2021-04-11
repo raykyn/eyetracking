@@ -123,14 +123,14 @@ d_crit$cond <- factor(d_crit$cond)
 #### Define contrasts 
 # Create hypothesis matrix from the given research questions
 # main effects of dependency and grammaticality and their interaction (applied in Model 1 and 2)
-X_H <- matrix(c(1/8,1/8,1/8,1/8,1/8,1/8,1/8,1/8,     # Intercept
-                1/4,1/4,1/4,1/4,-1/4,-1/4,-1/4,-1/4, # Main effect dependency type
-                -1/4,-1/4,1/4,1/4,-1/4,-1/4,1/4,1/4, # Main effect grammaticality
-                1/4,-1/4,-1/4,1/4,1/4,-1/4,-1/4,1/4, # Main effect of interference
-                -1/4,-1/4,1/4,1/4,1/4,1/4,-1/4,-1/4, # Grammaticality x Dependency
-                -1/4,1/4,-1/4,1/4,-1/4,1/4,-1/4,1/4, # Interference x Grammaticality
-                1/4,-1/4,-1/4,1/4,-1/4,1/4,1/4,-1/4, # Interference x Dependency type
-                -1/4,1/4,-1/4,1/4,1/4,-1/4,1/4,-1/4 # Interference x Grammaticality x Dependency # NOTE: Is it really just multiplying?
+X_H <- matrix(c( 1/8,  1/8,  1/8,  1/8,  1/8,  1/8,  1/8,  1/8, # Intercept
+                 1/4,  1/4,  1/4,  1/4, -1/4, -1/4, -1/4, -1/4, # Main effect dependency type
+                -1/4, -1/4,  1/4,  1/4, -1/4, -1/4,  1/4,  1/4, # Main effect grammaticality
+                 1/4, -1/4, -1/4,  1/4,  1/4, -1/4, -1/4,  1/4, # Main effect of interference
+                -1/4, -1/4,  1/4,  1/4,  1/4,  1/4, -1/4, -1/4, # Grammaticality x Dependency
+                -1/4,  1/4, -1/4,  1/4, -1/4,  1/4, -1/4,  1/4, # Interference x Grammaticality
+                 1/4, -1/4, -1/4,  1/4, -1/4,  1/4,  1/4, -1/4, # Interference x Dependency type
+                -1/4,  1/4, -1/4,  1/4,  1/4, -1/4,  1/4, -1/4  # Interference x Grammaticality x Dependency
 ), byrow=TRUE, nrow = 8)
 
 # Compute the inverse of X_H
