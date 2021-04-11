@@ -220,5 +220,9 @@ summary(m)
 
 # Effect of dependency type on the ms scale              
 ########################################################
-YOUR CODE GOES HERE # TODO
+# NOTE: Not sure if this is really what they mean...
+ms_effects <- exp(fixef(m))
+ms_effects["condDep"]
+# A change from "reflexive" to "agreement" dependency type increases log(TFT) by 0.2775904
+# This corresponds to multiplying TFT by e^0.2775904 = 1.319945
 ########################################################
