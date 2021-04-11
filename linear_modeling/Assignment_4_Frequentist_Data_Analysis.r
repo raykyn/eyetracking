@@ -206,7 +206,13 @@ summary(m)
 
 # Interpret the model output verbally.
 ########################################################
-YOUR ANSWER GOES HERE # TODO
+# t values for Dep and Gram are large enough to be significant,
+# i.e. dependency type and grammaticality have a significant
+# effect on logarithmic total fixation time.
+# The estimated betas for these contrasts are positive, which means:
+# - Subject-verb agreement has larger TFT than reflexive-antecedent binding
+# - Ungrammatical items have larger TFT than grammatical ones
+# The other contrasts do not show significant effects.
 ########################################################
 
 # We have modeled log(TFT). However, for the conceptual interpretation, it is often easier to express the effect sizes on the ms-scale rather than the log-ms scale
