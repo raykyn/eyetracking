@@ -221,8 +221,19 @@ summary(m)
 # Effect of dependency type on the ms scale              
 ########################################################
 # NOTE: Not sure if this is really what they mean...
-ms_effects <- exp(fixef(m))
-ms_effects["condDep"]
+
 # A change from "reflexive" to "agreement" dependency type increases log(TFT) by 0.2775904
 # This corresponds to multiplying TFT by e^0.2775904 = 1.319945
+ms_effects <- exp(fixef(m))
+ms_effects["condDep"]
+
+# For example, the average TFT for the "reflexive" dependency type is 553.5267 ms:
+average_reflexive_tft <-
+    d_crit_tft %>%
+    filter(cond %in% c("e", "f", "g", "h")) %>%
+    summarize(mean(TFT))
+
+# Applying a factor of 1.319945 would mean an expected increase by 177.0983 ms
+# when changing the dependency type to "agreement":
+ms_increase <- average_reflexive_tft * ms_effects["condDep"] - average_reflexive_tft
 ########################################################
