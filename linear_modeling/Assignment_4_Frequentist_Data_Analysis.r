@@ -1,3 +1,5 @@
+# Solution by Ismail Prada & Andreas Säuberli
+
 # Lena Jäger
 # Eyetracking: From experiment design to statistical and machine learning-based data analysis
 # Assignment 4: Frequentist statistical analysis of a psycholinguistic eye-tracking-while-reading experiment
